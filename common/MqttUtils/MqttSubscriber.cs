@@ -23,7 +23,6 @@ namespace MqttUtils
             if (!mqttClient.IsConnected)
                 throw new ArgumentException("The provided mqtt client should be connected");
             
-            //_mqttClient.UseConnectedHandler(e => { Console.WriteLine("connected"); });
             mqttClient.UseApplicationMessageReceivedHandler(e => 
             {
                 _whenMessageReceived.OnNext((e.ApplicationMessage.Topic, Encoding.UTF8.GetString(e.ApplicationMessage.Payload)));
@@ -41,24 +40,5 @@ namespace MqttUtils
                 
             await _mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).Build());
         }
-
-        // public async Task Init()
-        // {
-        //     // Setup and start a managed MQTT client.
-        //     var options = new ManagedMqttClientOptionsBuilder()
-        //         .WithAutoReconnectDelay(TimeSpan.FromSeconds(5))
-        //         .WithClientOptions(new MqttClientOptionsBuilder()
-        //             .WithClientId("Client1")
-        //             .WithTcpServer("mew.bertze.se")
-        //             .WithCredentials("hallondisp", "disphallon")
-        //             .Build())
-        //         .Build();
-        //
-        //     // _mqttClient = _mqttFactory.CreateManagedMqttClient();
-        //     await _mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("#").Build());
-        //     await _mqttClient.StartAsync(options);
-        // }
-
-        
     }
 }

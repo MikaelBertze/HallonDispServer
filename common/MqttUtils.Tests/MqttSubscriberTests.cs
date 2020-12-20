@@ -44,7 +44,7 @@ namespace MqttUtils.Tests
                 .WithPayload(Encoding.UTF8.GetBytes("test message"))
                 .Build());
 
-            Assert.True(waitHanle.WaitOne(TimeSpan.FromSeconds(2)), "Timeout waiting for message to be received");
+            Assert.True(waitHanle.WaitOne(TimeSpan.FromSeconds(5)), "Timeout waiting for message to be received");
             Assert.Equal("test message", receivedMessage);
             Assert.Equal(topic, receivedTopic);
         }
