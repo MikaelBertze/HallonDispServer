@@ -20,6 +20,10 @@ namespace MqttUtils.Tests
         [Fact]
         public async Task IntegrationTest()
         {
+            // Note: Require mosquitto on localhost port 1883. No user/password
+            // To run with docker:
+            // > docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto
+            
             // Arrange
             var waitHanle = new AutoResetEvent(false);
             var server = "localhost";
