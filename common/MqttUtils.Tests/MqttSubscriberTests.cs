@@ -20,7 +20,7 @@ namespace MqttUtils.Tests
         public async Task IntegrationTest()
         {
             var waitHanle = new AutoResetEvent(false);
-            var server = "mosquitto";
+            var server = "localhost";
             var topic = "hallondisp/unittest";
             var factory = new MqttClientFactory();
 
