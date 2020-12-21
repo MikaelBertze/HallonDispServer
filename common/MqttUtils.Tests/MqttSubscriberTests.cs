@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet;
+using MQTTnet.Client.Publishing;
 using MQTTnet.Client.Receiving;
 using MQTTnet.Extensions.ManagedClient;
 using NSubstitute;
@@ -25,9 +26,9 @@ namespace MqttUtils.Tests
             var factory = new MqttClientFactory();
 
             var client1 = await factory.GetConnectedMqttClient(server, null, null);
-            var client2 = await factory.GetConnectedMqttClient(server, null, null);
+            //var client2 = await factory.GetConnectedMqttClient(server, null, null);
             
-            var sut = new MqttSubscriber(client2);
+            var sut = new MqttSubscriber(client1);
             string receivedTopic = null;
             string receivedMessage = null;
             sut.WhenMessageReceived.Subscribe(x =>
@@ -39,12 +40,13 @@ namespace MqttUtils.Tests
 
             await sut.RegisterTopic(topic);
 
-            await client1.PublishAsync(new MqttApplicationMessageBuilder()
+            var result = await client1.PublishAsync(new MqttApplicationMessageBuilder()
                 .WithTopic(topic)
                 .WithPayload(Encoding.UTF8.GetBytes("test message"))
                 .Build());
 
-            waitHanle.WaitOne(TimeSpan.FromSeconds(5)); //), "Timeout waiting for message to be received");
+            Assert.True(result.ReasonCode == MqttClientPublishReasonCode.Success, $"Could nor publish({result.ReasonCode})");
+            Assert.True(waitHanle.WaitOne(TimeSpan.FromSeconds(5)), "Timeout waiting for message to be received");
             Assert.Equal("test message", receivedMessage);
             Assert.Equal(topic, receivedTopic);
         }
