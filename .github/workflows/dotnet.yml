@@ -14,7 +14,8 @@ jobs:
 
     services:
       image: eclipse-mosquitto
-      ports: 1883:1883
+      ports:
+      - 1883:1883
 
     steps:
     - name: checkout
