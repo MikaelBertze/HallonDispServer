@@ -12,13 +12,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      image: eclipse-mosquitto
+      ports: 1883:1883
+
     steps:
     - name: checkout
       uses: actions/checkout@v2
     
-    - name: Start Mosquitto
-      run: docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto
-          
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
