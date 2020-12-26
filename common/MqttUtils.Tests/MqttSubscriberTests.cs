@@ -31,8 +31,9 @@ namespace MqttUtils.Tests
             var factory = new MqttClientFactory();
 
             var client1 = await factory.GetConnectedMqttClient(server, null, null, "test1");
-            var client2 = await factory.GetConnectedMqttClient(server, null, null, "test2");
             var sut = new MqttSubscriber(client1);
+            await sut.RegisterTopic(topic);
+            
             string receivedTopic = null;
             string receivedMessage = null;
             sut.WhenMessageReceived.Subscribe(x =>
@@ -42,7 +43,8 @@ namespace MqttUtils.Tests
                 waitHanle.Set();
             });
 
-            await sut.RegisterTopic(topic);
+            
+            var client2 = await factory.GetConnectedMqttClient(server, null, null, "test2");
             
             // Act
             var result = await client2.PublishAsync(new MqttApplicationMessageBuilder()
