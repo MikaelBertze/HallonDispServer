@@ -8,6 +8,7 @@ using MQTTnet;
 using MQTTnet.Client.Publishing;
 using MQTTnet.Client.Receiving;
 using MQTTnet.Extensions.ManagedClient;
+using MQTTnet.Protocol;
 using NSubstitute;
 using Xunit;
 
@@ -49,6 +50,7 @@ namespace MqttUtils.Tests
             // Act
             var result = await client2.PublishAsync(new MqttApplicationMessageBuilder()
                 .WithTopic(topic)
+                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                 .WithPayload(Encoding.UTF8.GetBytes("test message"))
                 .Build());
             Assert.True(result.ReasonCode == MqttClientPublishReasonCode.Success, $"Could nor publish({result.ReasonCode})");
