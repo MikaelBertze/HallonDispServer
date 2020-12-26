@@ -30,7 +30,8 @@ namespace MqttUtils.Tests
             var topic = "hallondisp/unittest";
             var factory = new MqttClientFactory();
 
-            var client1 = await factory.GetConnectedMqttClient(server, null, null);
+            var client1 = await factory.GetConnectedMqttClient(server, null, null, "test1");
+            var client2 = await factory.GetConnectedMqttClient(server, null, null, "test2");
             var sut = new MqttSubscriber(client1);
             string receivedTopic = null;
             string receivedMessage = null;
@@ -44,7 +45,7 @@ namespace MqttUtils.Tests
             await sut.RegisterTopic(topic);
             
             // Act
-            var result = await client1.PublishAsync(new MqttApplicationMessageBuilder()
+            var result = await client2.PublishAsync(new MqttApplicationMessageBuilder()
                 .WithTopic(topic)
                 .WithPayload(Encoding.UTF8.GetBytes("test message"))
                 .Build());

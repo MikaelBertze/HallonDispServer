@@ -10,7 +10,7 @@ namespace MqttUtils
 {
     public interface IMqttClientFactory
     {
-        Task<IManagedMqttClient> GetConnectedMqttClient(string server, string user, string passwd, string clientId = null);
+        Task<IManagedMqttClient> GetConnectedMqttClient(string server, string user, string passwd, string clientId);
     }
 
     public class MqttClientFactory: IMqttClientFactory
@@ -18,7 +18,7 @@ namespace MqttUtils
         private AutoResetEvent _whenConnected = new AutoResetEvent(false);
         private Random _random = new Random();
 
-        public async Task<IManagedMqttClient> GetConnectedMqttClient(string server, string user, string passwd, string clientId = null)
+        public async Task<IManagedMqttClient> GetConnectedMqttClient(string server, string user, string passwd, string clientId)
         {
             if (clientId == null)
             {
