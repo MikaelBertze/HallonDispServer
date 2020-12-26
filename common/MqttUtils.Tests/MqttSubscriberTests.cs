@@ -74,6 +74,21 @@ namespace MqttUtils.Tests
         }
         
         [Fact]
+        public async Task RegisterTopic_OnlySubscribeOncePerTopic()
+        {
+            // Arrange
+            var (client, sut) = _SetupSubscriber();
+            
+            // Act
+            await sut.RegisterTopic("topic1");
+            await sut.RegisterTopic("topic1");
+
+            // Assert
+            await client.Received(1)
+                .SubscribeAsync(Arg.Is<IEnumerable<MqttTopicFilter>>(x => x.Single().Topic == "topic1"));
+        }
+        
+        [Fact]
         public void MessageReceived_ShallFireOnObservable()
         {
             // Arrange

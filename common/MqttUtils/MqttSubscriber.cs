@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace MqttUtils
     public class MqttSubscriber : IMqttSubscriber
     {
         private readonly IManagedMqttClient _mqttClient;
+        private readonly List<string> _subscribedTopics = new List<string>();
         private readonly Subject<(string topic, string message)> _whenMessageReceived = new Subject<(string topic, string message)>();
         
         public MqttSubscriber(IManagedMqttClient mqttClient)
@@ -36,8 +38,12 @@ namespace MqttUtils
             {
                 throw new ArgumentException("MQTT client must be connected before subscribing to topics");
             }
-                
-            await _mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).Build());
+
+            if (!_subscribedTopics.Contains(topic))
+            {
+                _subscribedTopics.Add(topic);
+                await _mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).Build());
+            }
         }
     }
 }

@@ -8,12 +8,12 @@ using MQTTnet.Extensions.ManagedClient;
 
 namespace MqttUtils
 {
-    public interface IMqttSubscriberFactory
+    public interface IMqttClientFactory
     {
         Task<IManagedMqttClient> GetConnectedMqttClient(string server, string user, string passwd, string clientId = null);
     }
 
-    public class MqttClientFactory: IMqttSubscriberFactory
+    public class MqttClientFactory: IMqttClientFactory
     {
         private AutoResetEvent _whenConnected = new AutoResetEvent(false);
         private Random _random = new Random();
