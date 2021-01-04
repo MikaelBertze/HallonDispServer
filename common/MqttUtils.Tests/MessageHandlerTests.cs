@@ -2,6 +2,7 @@ using System;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using HallonDispDtos;
 using MqttUtils.Messages;
 using NSubstitute;
 using Xunit;

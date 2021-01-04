@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{D05EB9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttUtils.Tests", "common\MqttUtils.Tests\MqttUtils.Tests.csproj", "{5A203AB8-F520-45ED-8A72-BD4FF7F43DB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HallonDispDtos", "common\HallonDispDtos\HallonDispDtos.csproj", "{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,9 +48,22 @@ Global
 		{5A203AB8-F520-45ED-8A72-BD4FF7F43DB5}.Release|x64.Build.0 = Release|Any CPU
 		{5A203AB8-F520-45ED-8A72-BD4FF7F43DB5}.Release|x86.ActiveCfg = Release|Any CPU
 		{5A203AB8-F520-45ED-8A72-BD4FF7F43DB5}.Release|x86.Build.0 = Release|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Debug|x64.Build.0 = Debug|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Debug|x86.Build.0 = Debug|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Release|x64.ActiveCfg = Release|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Release|x64.Build.0 = Release|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Release|x86.ActiveCfg = Release|Any CPU
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{888F8948-A987-4587-AFDB-7ED3A2AF06CD} = {D05EB9A6-4F2F-4263-A14A-BB2FF4895E7B}
 		{5A203AB8-F520-45ED-8A72-BD4FF7F43DB5} = {D05EB9A6-4F2F-4263-A14A-BB2FF4895E7B}
+		{8E378EEB-05E9-4A25-8AA8-9731E5170C3B} = {D05EB9A6-4F2F-4263-A14A-BB2FF4895E7B}
 	EndGlobalSection
 EndGlobal

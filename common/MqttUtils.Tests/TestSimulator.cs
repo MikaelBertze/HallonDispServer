@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using HallonDispDtos;
 using MQTTnet;
 using MQTTnet.Extensions.ManagedClient;
 using MqttUtils.Messages;

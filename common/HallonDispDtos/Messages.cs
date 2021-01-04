@@ -1,5 +1,5 @@
 ﻿
-namespace MqttUtils.Messages
+namespace HallonDispDtos
 {
     public class SwitchMessage
     {
