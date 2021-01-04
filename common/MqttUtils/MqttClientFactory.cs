@@ -22,7 +22,7 @@ namespace MqttUtils
         {
             if (clientId == null)
             {
-                clientId = _GenerateId();
+                throw new ArgumentException("clientId cannot be null");
             }
             var options = new ManagedMqttClientOptionsBuilder()
                 .WithAutoReconnectDelay(TimeSpan.FromSeconds(5))

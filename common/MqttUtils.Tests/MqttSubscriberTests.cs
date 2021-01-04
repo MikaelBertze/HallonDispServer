@@ -43,11 +43,11 @@ namespace MqttUtils.Tests
                 receivedTopic = x.topic;
                 waitHanle.Set();
             });
-
             
             var client2 = await factory.GetConnectedMqttClient(server, null, null, "test2");
             
             // Act
+            
             var result = await client2.PublishAsync(new MqttApplicationMessageBuilder()
                 .WithTopic(topic)
                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
