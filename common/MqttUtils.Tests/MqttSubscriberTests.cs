@@ -8,6 +8,7 @@ using MQTTnet;
 using MQTTnet.Client.Publishing;
 using MQTTnet.Client.Receiving;
 using MQTTnet.Extensions.ManagedClient;
+using MQTTnet.Protocol;
 using NSubstitute;
 using Xunit;
 
@@ -20,14 +21,20 @@ namespace MqttUtils.Tests
         [Fact]
         public async Task IntegrationTest()
         {
+            // Note: Require mosquitto on localhost port 1883. No user/password
+            // To run with docker:
+            // > docker run -d -p 1883:1883 -p 9001:9001 eclipse-mosquitto
+            
             // Arrange
             var waitHanle = new AutoResetEvent(false);
             var server = "localhost";
             var topic = "hallondisp/unittest";
             var factory = new MqttClientFactory();
 
-            var client1 = await factory.GetConnectedMqttClient(server, null, null);
+            var client1 = await factory.GetConnectedMqttClient(server, null, null, "test1");
             var sut = new MqttSubscriber(client1);
+            await sut.RegisterTopic(topic);
+            
             string receivedTopic = null;
             string receivedMessage = null;
             sut.WhenMessageReceived.Subscribe(x =>
@@ -36,12 +43,14 @@ namespace MqttUtils.Tests
                 receivedTopic = x.topic;
                 waitHanle.Set();
             });
-
-            await sut.RegisterTopic(topic);
+            
+            var client2 = await factory.GetConnectedMqttClient(server, null, null, "test2");
             
             // Act
-            var result = await client1.PublishAsync(new MqttApplicationMessageBuilder()
+            
+            var result = await client2.PublishAsync(new MqttApplicationMessageBuilder()
                 .WithTopic(topic)
+                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                 .WithPayload(Encoding.UTF8.GetBytes("test message"))
                 .Build());
             Assert.True(result.ReasonCode == MqttClientPublishReasonCode.Success, $"Could nor publish({result.ReasonCode})");
@@ -67,6 +76,21 @@ namespace MqttUtils.Tests
                 .SubscribeAsync(Arg.Is<IEnumerable<MqttTopicFilter>>(x => x.Single().Topic == "topic1"));
             await client.Received(1)
                 .SubscribeAsync(Arg.Is<IEnumerable<MqttTopicFilter>>(x => x.Single().Topic == "topic2"));
+        }
+        
+        [Fact]
+        public async Task RegisterTopic_OnlySubscribeOncePerTopic()
+        {
+            // Arrange
+            var (client, sut) = _SetupSubscriber();
+            
+            // Act
+            await sut.RegisterTopic("topic1");
+            await sut.RegisterTopic("topic1");
+
+            // Assert
+            await client.Received(1)
+                .SubscribeAsync(Arg.Is<IEnumerable<MqttTopicFilter>>(x => x.Single().Topic == "topic1"));
         }
         
         [Fact]
