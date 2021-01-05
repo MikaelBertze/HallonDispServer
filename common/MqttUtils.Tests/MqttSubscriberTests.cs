@@ -47,16 +47,26 @@ namespace MqttUtils.Tests
             var client2 = await factory.GetConnectedMqttClient(server, null, null, "test2");
             
             // Act
-            
-            var result = await client2.PublishAsync(new MqttApplicationMessageBuilder()
-                .WithTopic(topic)
-                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
-                .WithPayload(Encoding.UTF8.GetBytes("test message"))
-                .Build());
-            Assert.True(result.ReasonCode == MqttClientPublishReasonCode.Success, $"Could nor publish({result.ReasonCode})");
-            
+            int bailCount = 0;
+
+            while (!waitHanle.WaitOne(0))
+            {
+                var result = await client2.PublishAsync(new MqttApplicationMessageBuilder()
+                    .WithTopic(topic)
+                    .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                    .WithPayload(Encoding.UTF8.GetBytes("test message"))
+                    .Build());
+                Assert.True(result.ReasonCode == MqttClientPublishReasonCode.Success,
+                    $"Could nor publish({result.ReasonCode})");
+                await Task.Delay(10);
+                
+                if (++bailCount > 5)
+                    break;
+            }
+
+            //waitHanle.WaitOne(TimeSpan.FromSeconds(5));
+
             // Assert
-            Assert.True(waitHanle.WaitOne(TimeSpan.FromSeconds(5)), "Timeout waiting for message to be received");
             Assert.Equal("test message", receivedMessage);
             Assert.Equal(topic, receivedTopic);
         }

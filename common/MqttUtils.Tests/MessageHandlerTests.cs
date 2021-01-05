@@ -2,6 +2,7 @@ using System;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using DeviceSimulation;
 using HallonDispDtos;
 using MqttUtils.Messages;
 using NSubstitute;
@@ -21,8 +22,8 @@ namespace MqttUtils.Tests
             // Arrange
             var factory = new MqttClientFactory();
 
-            var simulator = new TestSimulator.PowerSimulator(100, 200, 10,
-                await factory.GetConnectedMqttClient("localhost", null, null, "sim"));
+            var simulator = new PowerSimulator(100, 200, 10,
+                await factory.GetConnectedMqttClient("localhost", null, null, "sim"), "hallondisptest/power");
             var tokenSource = simulator.Run();
             var client = await factory.GetConnectedMqttClient("localhost", null, null, "mht");
             var subscriber = new MqttSubscriber(client);
@@ -37,9 +38,10 @@ namespace MqttUtils.Tests
                 powerMessage = x;
                 waitHanle.Set();
             });
+            
+            waitHanle.WaitOne(TimeSpan.FromSeconds(5));
 
             // Assert
-            Assert.True(waitHanle.WaitOne(TimeSpan.FromSeconds(5)), "Timeout waiting for message to be received");
             Assert.NotNull(powerMessage);
             Assert.InRange(powerMessage.PowerTickPeriodMs, 100, 200);
 
@@ -81,6 +83,27 @@ namespace MqttUtils.Tests
             Assert.NotNull(powerMessage);
             Assert.Equal("garage", powerMessage.Id);
             Assert.Equal(1778, powerMessage.PowerTickPeriodMs);
+        }
+        
+        [Fact]
+        public void TempMessage_Received()
+        {
+            // Arrange
+            var mqttSubscriber = Substitute.For<IMqttSubscriber>();
+            var whenMessageReceivedObservable = new Subject<(string topic, string message)>();
+            mqttSubscriber.WhenMessageReceived.Returns(whenMessageReceivedObservable);
+            var sut = new MessageHandler<TempMessage>("temperature", mqttSubscriber);
+            TempMessage tempMessage = null;
+            sut.WhenMessageReceived.Subscribe(x => { tempMessage = x; });
+            string iotMessage = "{ \"id\" : \"test\", \"temp\" : 13.9 }";
+
+            // Act
+            whenMessageReceivedObservable.OnNext(("temperature", iotMessage));
+
+            // Assert
+            Assert.NotNull(tempMessage);
+            Assert.Equal("test", tempMessage.Id);
+            Assert.InRange(tempMessage.Temp, 13.89, 13.91);
         }
 
         [Fact]

@@ -1,6 +1,17 @@
 ﻿
 namespace HallonDispDtos
 {
+    public class TempMessage
+    {
+        public TempMessage(string id, double temp)
+        {
+            Id = id;
+            Temp = temp;
+        }
+        public string Id { get; }
+        public double Temp { get; }
+    }
+    
     public class SwitchMessage
     {
         public SwitchMessage(string id, bool state)

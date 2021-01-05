@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\DeviceSimulation\DeviceSimulation.csproj" />
       <ProjectReference Include="..\MqttUtils\MqttUtils.csproj" />
     </ItemGroup>
 
